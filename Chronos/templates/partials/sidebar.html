@@ -1,0 +1,167 @@
+<aside class="sidebar bg-gray-900 text-white w-64 p-4 space-y-6 flex-shrink-0">
+    <div class="flex items-center space-x-3">
+      <img src="/static/chronos.png" class="w-12 h-12">
+      <div class="text-2xl font-bold">Chronos</div>
+    </div>
+
+    <!-- Calendar Section -->
+    <div class="calendar-section">
+      <!-- <h3 class="text-lg font-semibold mb-2">Calendrier</h3> -->
+      <div id="calendar-container" class="bg-gray-800 p-3"></div>
+    </div>
+
+    <!-- Main Navigation (moved from header) -->
+    <nav class="pt-5 mt-5 space-y-2 border-t border-gray-700 dark:border-gray-900">
+        <ul class="flex flex-col space-y-1">
+            <li>
+                <a onclick="chargerContenu('content_task');" class="nav-link block py-2 px-3 text-gray-400 hover:bg-gray-700 rounded-md">Home</a>
+            </li>
+            <li>
+                <a onclick="chargerContenu('daily');" class="nav-link block py-2 px-3 text-gray-400 hover:bg-gray-700 rounded-md">Daily</a>
+            </li>
+            <li>
+                <a onclick="chargerContenu('dashboard');" class="nav-link block py-2 px-3 text-gray-400 hover:bg-gray-700 rounded-md">Dashboard</a>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="pt-5 mt-5 space-y-2 border-t border-gray-700 dark:border-gray-900"></div>
+
+    <!-- Urgent Tasks Section -->
+    <div class="urgent-tasks-section" style="padding-bottom: 10px;">
+      <h3 class="text-lg font-semibold m-3">Tâches urgentes</h3>
+      <ul id="urgent-tasks-list" class="space-y-2">
+        {% include 'partials/urgent_tasks_list.html' %}
+      </ul>
+    </div>
+  </aside>
+
+  <script>
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initial render of the calendar
+      fetchAndRenderCalendar();
+    });
+
+    function renderCalendar(datesWithTasks, month, year) {
+      const calendarContainer = document.getElementById('calendar-container');
+      calendarContainer.innerHTML = ''; // Clear previous calendar
+
+      const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 for Sunday, 1 for Monday, etc.
+
+      // Adjust firstDayOfMonth for Monday start (0 for Monday)
+      const startDay = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
+
+      const header = document.createElement('div');
+      header.className = 'flex justify-between items-center mb-2';
+      header.innerHTML = `
+        <button id="prevMonth" class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600">&lt;</button>
+        <h4 class="text-lg font-semibold">${monthNames[month]} ${year}</h4>
+        <button id="nextMonth" class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600">&gt;</button>
+      `;
+      calendarContainer.appendChild(header);
+
+      const daysHeader = document.createElement('div');
+      daysHeader.className = 'grid grid-cols-7 text-center text-sm font-semibold mb-1';
+      daysHeader.innerHTML = `
+        <div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div>
+      `;
+      calendarContainer.appendChild(daysHeader);
+
+      const daysGrid = document.createElement('div');
+      daysGrid.className = 'grid grid-cols-7 text-center text-sm';
+      calendarContainer.appendChild(daysGrid);
+
+      // Fill leading empty days
+      for (let i = 0; i < startDay; i++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'p-1';
+        daysGrid.appendChild(emptyDay);
+      }
+
+      // Fill days of the month
+      const today = new Date();
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'relative flex flex-col items-center justify-center';
+
+        const dayNumberSpan = document.createElement('span');
+        dayNumberSpan.textContent = day;
+        dayNumberSpan.className = 'relative w-6 h-6 rounded-full z-10 inline-flex items-center justify-center';
+
+        const fullDate = new Date(year, month, day);
+        const isoDate = `${fullDate.getFullYear()}-${(fullDate.getMonth() + 1).toString().padStart(2, '0')}-${fullDate.getDate().toString().padStart(2, '0')}`;
+
+        const isScheduled = datesWithTasks.scheduled.includes(isoDate);
+        const isDeadline = datesWithTasks.deadline.includes(isoDate);
+
+        const overlaySpan = document.createElement('span');
+        overlaySpan.className = 'absolute w-5 h-5 rounded-full z-[-1] inline-flex items-center justify-center';
+        
+        // Add chip for scheduled tasks
+        if (isScheduled && isDeadline) {
+          overlaySpan.classList.add('calendar-chip-both', 'text-white');
+          dayNumberSpan.appendChild(overlaySpan);
+          /*const bothChip = document.createElement('span');
+          bothChip.className = 'calendar-chip calendar-chip-both';
+          dayElement.appendChild(bothChip);*/
+        } else if (isScheduled) {
+          overlaySpan.classList.add('calendar-chip-scheduled', 'text-white');
+          dayNumberSpan.appendChild(overlaySpan);
+          /*const scheduledChip = document.createElement('span');
+          scheduledChip.className = 'calendar-chip calendar-chip-scheduled';
+          dayElement.appendChild(scheduledChip);*/
+        } else if (isDeadline) {
+          overlaySpan.classList.add('calendar-chip-deadline', 'text-white');
+          dayNumberSpan.appendChild(overlaySpan);
+          /*const deadlineChip = document.createElement('span');
+          deadlineChip.className = 'calendar-chip calendar-chip-deadline w-5 h-5';
+          dayElement.appendChild(deadlineChip);*/
+        }
+
+        if (isScheduled || isDeadline) {
+            dayElement.classList.add('cursor-pointer', 'hover:bg-gray-700');
+            dayElement.addEventListener('click', () => {
+                fetch(`/api/tasks_for_date/${isoDate}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('content').innerHTML = html;
+                    });
+            });
+        }
+
+        // Highlight today
+        if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+          overlaySpan.classList.add('calendar-chip-day', 'text-white');
+          dayNumberSpan.appendChild(overlaySpan);
+        }
+
+        dayElement.appendChild(dayNumberSpan);
+        daysGrid.appendChild(dayElement);
+      }
+
+      document.getElementById('prevMonth').addEventListener('click', () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        }
+        fetchAndRenderCalendar();
+      });
+
+      document.getElementById('nextMonth').addEventListener('click', () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+        fetchAndRenderCalendar();
+      });
+    }
+
+    
+  </script>

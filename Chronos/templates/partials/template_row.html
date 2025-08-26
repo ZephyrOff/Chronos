@@ -1,0 +1,26 @@
+<tr class="group task-line" data-template-id="{{ template.id }}">
+    <td class="px-4 py-2">
+        <div class="flex items-center">
+            <strong>
+              <span class="mr-1">{{ template.icon or '📁' if template.children else '📋' }}</span>
+              {{ template.name }}
+            </strong>
+        </div>
+    </td>
+    <td class="px-4 py-2 space-x-2 align-top">
+        <button type="button" class="text-red-500 hover:underline delete-template-btn" data-template-id="{{ template.id }}">Supprimer</button>
+    </td>
+</tr>
+{% for sub in template.children %}
+<tr class="group subtask-line child-of-template-{{ template.id }}" data-template-id="{{ sub.id }}">
+    <td class="px-4 py-2">
+        <div class="pl-6 flex items-center">
+            <strong>
+                <span class="mr-1">{{ sub.icon or '📋' }}</span> 
+                {{ sub.name }}
+            </strong>
+        </div>
+    </td>
+    <td></td>
+</tr>
+{% endfor %}

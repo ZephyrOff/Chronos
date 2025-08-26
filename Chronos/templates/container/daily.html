@@ -1,0 +1,200 @@
+<div class="mt-4 p-6 max-w-4xl mx-auto bg-gray-800 rounded-lg shadow-xl">
+  <h1 class="text-3xl font-extrabold mb-6 text-white text-center">🗒️ Rapport Journalier</h1>
+
+  <div class="mb-6 flex flex-wrap gap-4 items-center justify-center">
+    <!-- Recherche par date -->
+    <label for="daily-date" class="font-semibold text-gray-300 text-lg">📅 Rechercher par date :</label>
+    <input type="text" id="calendar" class="flex-1 min-w-0 border border-gray-600 bg-gray-700 text-white p-2 rounded-md shadow-sm focus:ring-nord-frost focus:border-nord-frost transition duration-200 ease-in-out" placeholder="Choisir une date">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/air-datepicker@3.3.5/air-datepicker.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.3.5/air-datepicker.min.js"></script>
+  </div>
+
+  <div class="mb-6 flex flex-wrap gap-4 items-center justify-center">
+    <!-- Recherche par mots-clés -->
+    <label for="daily-search" class="font-semibold text-gray-300 text-lg">🔎 Recherche par mots-clés :</label>
+    <input type="text" id="daily-search" placeholder="Mots-clés..." class="flex-1 min-w-0 border border-gray-600 bg-gray-700 text-white p-2 rounded-md shadow-sm focus:ring-nord-frost focus:border-nord-frost transition duration-200 ease-in-out">
+  </div>
+
+  <!-- Résultats -->
+  <div id="search-results" class="mb-6 hidden bg-gray-700 border border-gray-600 rounded-md shadow-md p-4 max-h-60 overflow-y-auto text-white"></div>
+
+
+
+  <button id="toggle-mode" class="mb-6 px-6 py-3 rounded-md transition duration-200 ease-in-out font-semibold focus:outline-none focus:ring-2 focus:ring-nord-frost focus:ring-opacity-75">
+    Mode lecture
+  </button>
+
+  <div class="inline-flex items-center ml-4 text-gray-300" id="save-status">
+    <span></span>
+  </div>
+
+  <p id="daily-date" class="text-sm text-gray-500 mb-2"></p>
+
+  <textarea id="daily-textarea" spellcheck="false"
+    class="w-full min-h-[300px] font-mono text-base leading-relaxed p-4 box-border border border-gray-600 bg-gray-700 text-white rounded-md shadow-sm focus:ring-nord-frost focus:border-nord-frost transition duration-200 ease-in-out resize-y"></textarea>
+
+  <div id="daily-render" aria-hidden="true" 
+    class="hidden p-4 font-sans text-base leading-relaxed border border-gray-600 rounded-md bg-gray-700 text-nord-snow-storm min-h-[300px] overflow-wrap break-word shadow-sm">
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="/static/daily.js"></script>
+
+<style>
+.flatpickr-calendar {
+  transform: scale(0.8);
+  transform-origin: top left;
+  visibility: hidden; /* caché au départ */
+  transition: visibility 0s linear 0.3s; /* délai pour la transition */
+}
+.flatpickr-calendar.open {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+  /* Nord colors */
+  :root {
+    --nord-polar-night: #2e3440;
+    --nord-polar-night-dark: #3b4252;
+    --nord-polar-night-darker: #434c5e;
+    --nord-snow-storm: #d8dee9;
+    --nord-frost: #81a1c1;
+    --nord-frost-dark: #5e81ac;
+    --nord-aurora: #88c0d0;
+    --nord-aurora-dark: #81a1c1;
+    --nord-red: #bf616a;
+    --nord-green: #a3be8c;
+    --nord-yellow: #ebcb8b;
+    --nord-orange: #d08770;
+  }
+
+  /* Bouton */
+  #toggle-mode {
+    display: inline-flex;   
+    background-color: transparent; /* No background */
+    color: var(--nord-frost); /* Use frost color for text */
+    border: 1px solid var(--nord-frost); /* Added border */
+    cursor: pointer;
+    font-weight: 600;
+    transition: color 0.3s ease; /* Transition color on hover */
+  }
+
+  #toggle-mode svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    stroke: currentColor;
+    flex-shrink: 0;                 /* Empêche le SVG de rétrécir */
+  }
+
+  #toggle-mode:hover {
+    color: var(--nord-frost-dark); /* Darker frost on hover */
+    text-decoration: underline; /* Add underline on hover for link-like behavior */
+  }
+
+  /* Textarea */
+  #daily-textarea {
+    /*background-color: var(--nord-polar-night);*/
+    /*color: var(--nord-snow-storm);*/
+    border: 1px solid var(--nord-polar-night-darker);
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 1rem;
+    line-height: 1.5;
+    padding: 0.5rem;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+
+  /* Markdown rendu - style Obsidian Nord */
+  /* Note: Some styles are now applied via Tailwind classes directly on the #daily-render div */
+  #daily-render h1 {
+    font-size: 2rem;
+    border-bottom: 1px solid var(--nord-polar-night-darker); /* Keep for now, could be border-gray-600 */
+    padding-bottom: 0.3rem;
+    margin-bottom: 1rem;
+    color: var(--nord-aurora);
+  }
+  #daily-render h2 {
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--nord-polar-night-darker); /* Keep for now, could be border-gray-600 */
+    padding-bottom: 0.25rem;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    color: var(--nord-aurora-dark);
+  }
+  #daily-render h3 {
+    font-size: 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--nord-frost);
+  }
+
+  /* Paragraphes */
+  #daily-render p {
+    margin: 0 0 1rem 0;
+  }
+
+  /* Liens */
+  #daily-render a {
+    color: var(--nord-aurora);
+    text-decoration: underline;
+  }
+  #daily-render a:hover {
+    color: var(--nord-aurora-dark);
+  }
+
+  /* Listes */
+  #daily-render ul,
+  #daily-render ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Code inline */
+  #daily-render code {
+    background-color: var(--nord-polar-night-darker); /* Keep for now, could be bg-gray-800 */
+    color: var(--nord-frost);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.95rem;
+  }
+
+  /* Blocs de code */
+  #daily-render pre {
+    background-color: var(--nord-polar-night-darker); /* Keep for now, could be bg-gray-800 */
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: var(--nord-frost);
+  }
+
+  /* Citations */
+  #daily-render blockquote {
+    border-left: 4px solid var(--nord-aurora);
+    margin: 1rem 0;
+    padding-left: 1rem;
+    color: var(--nord-aurora-dark);
+    font-style: italic;
+    background-color: var(--nord-polar-night-darker); /* Keep for now, could be bg-gray-800 */
+    border-radius: 4px;
+  }
+
+  #toggle-mode svg {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle; /* pour aligner avec le texte */
+    margin-right: 0.5rem;
+    fill: currentColor; /* pour que la couleur du SVG suive celle du texte du bouton */
+    stroke: currentColor; /* pareil pour le stroke */
+  }
+</style>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="/static/daily.js"></script>
+

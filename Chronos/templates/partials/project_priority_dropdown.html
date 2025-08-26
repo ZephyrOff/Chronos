@@ -1,0 +1,15 @@
+<div class="relative inline-block text-xs font-medium">
+  <button class="toggle-dropdown px-2 py-1 rounded priority-cell {{ get_css_name(project.priority, priority_list) }}"
+          data-project-id="{{ project.id }}"
+          data-field="priority"
+          data-value="{{ project.priority }}">
+    {{ project.priority or '—' }}
+  </button>
+  <div class="dropdown-menu hidden absolute border rounded shadow text-sm z-10 mt-1 min-w-[130px]">
+    {% for p in priority_list %}
+      <div class="dropdown-option px-2 py-1 cursor-pointer" data-value="{{ p.name }}">
+        <div class="priority-cell {{ p.css_name }} text-xs">{{ p.name }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

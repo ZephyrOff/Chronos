@@ -1,0 +1,18 @@
+<form id="edit-script-form" method="post" action="/script/{{ script_template.id }}/update" class="space-y-4 p-6">
+  <h2 class="text-xl font-semibold mb-2">Éditer le script</h2>
+
+  <div>
+    <label class="block mb-1">Nom du script</label>
+    <input type="text" name="script_name" class="w-full border px-3 py-1 rounded" value="{{ script_template.name }}" required>
+  </div>
+
+  <div>
+    <label class="block mb-1">Contenu du script</label>
+    <textarea name="script_content" class="w-full border px-3 py-1 rounded h-48">{{ script_template.script_content }}</textarea>
+  </div>
+
+  <div class="flex justify-end space-x-2 mt-6">
+    <button type="button" id="modal-cancel" class="px-4 py-2 rounded border close-button" data-modal-type="edit-script">Annuler</button>
+    <button type="submit" class="px-4 py-2 rounded save-button">Mettre à jour</button>
+  </div>
+</form>

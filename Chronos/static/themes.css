@@ -1,0 +1,390 @@
+/* Modern Dark Theme for Chronos - Refined */
+
+:root {
+    --default-background: rgba(228, 233, 239, 1);
+    --default-color: rgba(51, 56, 61, 1);
+
+    --gray-background: rgba(229, 228, 223, 1);
+    --gray-color: rgba(102, 101, 97, 1);
+
+    --brown-background: rgba(241, 223, 215, 1);
+    --brown-color: rgba(77, 63, 55, 1);
+
+    --orange-background: rgba(247, 220, 202, 1);
+    --orange-color: rgba(106, 78, 57, 1);
+
+    --green-background: rgba(219, 237, 222, 1);
+    --green-color: rgba(36, 49, 45, 1);
+
+    --blue-background: rgba(198, 224, 241, 1);
+    --blue-color: rgba(47, 75, 94, 1);
+
+    --red-background: rgba(236, 212, 215, 1);
+    --red-color: rgba(95, 25, 38, 1);
+
+    --yellow-background: rgba(248, 230, 183, 1);
+    --yellow-color: rgba(149, 129, 94, 1);
+
+    --purple-background: rgba(233, 220, 238, 1);
+    --purple-color: rgba(74, 56, 86, 1);
+
+    --pink-background: rgba(248, 222, 233, 1);
+    --pink-color: rgba(112, 81, 95, 1);
+
+    --yellow-background: rgba(234, 235, 184, 1);
+    --yellow-color: rgba(77, 63, 55, 1);
+
+    /* Core Palette */
+    --background-dark: #1e1e1e; /* Very dark grey */
+    --background-medium: #282828; /* Slightly lighter dark grey for sidebar/headers */
+    --background-light: #333333; /* Even lighter for cards/elements */
+    --text-light: #e0e0e0; /* Light grey for main text */
+    --text-medium: #b0b0b0; /* Medium grey for secondary text */
+    --text-dark: #808080; /* Dark grey for subtle text */
+
+    /* Accent Colors (more vibrant, but professional) */
+    --accent-primary: #007bff; /* Primary action blue */
+    --accent-success: #28a745; /* Green for success */
+    --accent-warning: #ffc107; /* Yellow for warning */
+    --accent-danger: #dc3545; /* Red for danger */
+    --accent-info: #17a2b8; /* Cyan for info */
+    --accent-purple: #6f42c1; /* Purple for validation/special */
+    --accent-orange: #fd7e14; /* Orange for wait/high priority */
+
+    /* Borders & Shadows */
+    --border-color-subtle: rgba(255, 255, 255, 0.08); /* Very subtle light border */
+    --border-color-medium: rgba(255, 255, 255, 0.15); /* Slightly more visible border */
+    --shadow-color-dark: rgba(0, 0, 0, 0.4); /* Darker, more pronounced shadow */
+    --shadow-color-light: rgba(0, 0, 0, 0.2); /* Lighter shadow for subtle depth */
+}
+
+/* --- General Body & Layout --- */
+body {
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    font-size: 15px; /* Slightly larger base font */
+}
+
+aside.sidebar { /* Specific for sidebar background */
+    background-color: var(--background-medium);
+    color: var(--text-light);
+    border-right: 1px solid var(--border-color-medium);
+}
+
+/* --- Notifications --- */
+.notification {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 15px var(--shadow-color-dark);
+    color: white;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    font-weight: 500;
+}
+.notification.show { opacity: 1; transform: translateY(0); }
+.notification.success { background-color: var(--accent-success); }
+.notification.error { background-color: var(--accent-danger); }
+.notification.info { background-color: var(--accent-info); }
+
+/* --- Text Colors --- */
+.deadline-text { color: var(--text-medium); }
+.edit-text { color: rgba(89, 117, 147, 1); }
+
+/* --- Login Card Specific --- */
+.login-card {
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color-medium);
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px var(--shadow-color-dark);
+    color: var(--text-light);
+}
+.login-card h2 {
+    color: var(--text-light);
+}
+.form-control {
+    background-color: var(--background-medium);
+    border: 1px solid var(--border-color-subtle);
+    color: var(--text-light);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+}
+.form-control::placeholder { color: var(--text-medium); }
+.btn-primary {
+    background: linear-gradient(to right, var(--accent-primary), var(--accent-purple));
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--shadow-color-dark);
+}
+#error-message {
+    color: var(--accent-danger);
+}
+
+/* --- Drag and Drop --- */
+.drag-target-highlight {
+    outline: 2px dashed var(--accent-primary);
+    outline-offset: -2px;
+    background-color: rgba(0, 123, 255, 0.1);
+}
+.task-drop-hover {
+    background-color: rgba(0, 123, 255, 0.2) !important;
+}
+
+/* --- Priority & Status Tags --- */
+.priority, .status {
+    border-radius: 10px;
+    padding: 3px 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.priority { border-radius: 10px; padding-left: 3px; padding-right: 3px; }
+.priority_urgent    { background-color: var(--red-background); color: var(--red-color); } /* rouge clair */
+.priority_haut    { background-color: var(--orange-background); color: var(--orange-color); } /* rouge clair */
+.priority_moyen  { background-color: var(--blue-background); color: var(--blue-color); } /* jaune clair */
+.priority_bas    { background-color: var(--green-background); color: var(--green-color); } /* vert clair */
+
+
+/* Couleurs pour les statuts */
+.status { border-radius: 10px; padding-left: 3px; padding-right: 3px; }
+.status_not_started    { background-color: var(--default-background); color: var(--default-color); }
+.status_in_progress   { background-color: var(--blue-background); color: var(--blue-color); }
+.status_wait    { background-color: var(--orange-background); color: var(--orange-color); }
+.status_done    { background-color: var(--green-background); color: var(--green-color); }
+.status_is_waiting    { background-color: var(--yellow-background); color: var(--yellow-color); }
+.status_is_validation    { background-color: var(--purple-background); color: var(--purple-color); }
+.status_archived    { background-color: var(--gray-background); color: var(--gray-color); }
+
+
+.delete-button { background-color: rgba(115, 27, 38, 1); color: rgba(239, 239, 239, 1); }
+.delete-button:hover { background-color: rgba(91, 22, 30, 1); color: rgba(239, 239, 239, 1); }
+.save-button { background-color: rgba(42, 80, 163, 1); color: rgba(239, 239, 239, 1); }
+.save-button:hover { background-color: rgba(31, 58, 119, 1); color: rgba(239, 239, 239, 1); }
+.exec-button { background-color: rgba(29, 111, 59, 1); color: rgba(239, 239, 239, 1); }
+.exec-button:hover { background-color: rgba(20, 79,4 1, 1); color: rgba(239, 239, 239, 1); }
+.spe-button { background-color: rgba(84, 63, 117, 1); color: rgba(239, 239, 239, 1); }
+.spe-button:hover { background-color: rgba(66, 49, 93, 1); color: rgba(239, 239, 239, 1); }
+.close-button { background-color: rgba(84, 63, 117, 0); color: rgba(197, 197, 197, 1); }
+.close-button:hover { background-color: rgba(84, 63, 117, 0); color: rgba(170, 170, 170, 1); border: 1px solid rgba(170, 170, 170, 1); }
+
+.menu-button { background-color: rgba(17, 61, 108, 1); color: rgba(239, 239, 239, 1); }
+.menu-button:hover { background-color: rgba(14, 51, 90, 1); color: rgba(239, 239, 239, 1); }
+
+.separator { border-top: 1px solid rgba(114, 114, 114, 1); margin-top: 20px; }
+
+.titre-text { color: rgba(114, 114, 114, 1); }
+
+.filter-button {
+    background-color: var(--background-medium);
+    color: var(--text-light);
+    border: 1px solid var(--border-color-subtle);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.filter-button:hover {
+    background-color: var(--background-light);
+    border-color: var(--accent-primary);
+}
+
+/* --- General Styling for Cells --- */
+.status-cell, .priority-cell, .tag-cell {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    display: inline-block;
+}
+.status-cell { border-radius: 1.50rem; } /* Pill shape */
+
+/* --- Table Styling --- */
+.table_div {
+    margin-top: 20px;
+    color: var(--text-light);
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 30px var(--shadow-color-dark);
+    border: 1px solid var(--border-color-medium);
+
+    border-collapse: separate;
+    border-spacing: 0;
+}
+.table_div thead {
+    background-color: #212121;
+    color: var(--text-light);
+    font-weight: 600;
+    border-bottom: 1px solid #5d5d5d;
+}
+.table_div tbody {
+    background-color: #393939;
+    color: var(--text-light);
+}
+.table_div thead tr:first-child th:first-child { border-top-left-radius: 0.75rem; }
+.table_div thead tr:first-child th:last-child { border-top-right-radius: 0.75rem; }
+.table_div tbody tr:last-child td:first-child { border-bottom-left-radius: 0.75rem; }
+.table_div tbody tr:last-child td:last-child { border-bottom-right-radius: 0.75rem; }
+
+/* Table Row Borders */
+.table_div tbody tr {
+    border-bottom: 1px solid var(--border-color-subtle);
+}
+.table_div tbody tr:last-child {
+    border-bottom: none;
+}
+
+/* --- Progress Bar --- */
+.progress-bar {
+background-color: rgba(70, 75, 73, 0.8); /* Vert émeraude par exemple */
+}
+
+.progress-bar-percent {
+background-color: #10b981; /* Vert émeraude par exemple */
+}
+
+/* --- Dropdown Menus --- */
+.dropdown-menu {
+    background-color: var(--background-medium);
+    color: var(--text-light);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 15px var(--shadow-color-dark);
+    overflow: hidden;
+}
+.dropdown-option:hover {
+    background-color: var(--background-light);
+    color: var(--accent-primary);
+}
+.dropdown-option {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* --- Task Levels --- */
+.level-0 {
+    background-color: var(--background-medium);
+    border-top: 1px solid var(--border-color-medium);
+    border-bottom: 1px solid var(--border-color-medium);
+}
+.level-1 {
+    background-color: var(--background-light);
+    border-top: 1px solid var(--border-color-subtle);
+    border-bottom: 1px solid var(--border-color-subtle);
+}
+tr.level-1 + tr.level-2 { border-top: none; }
+.level-2, .level-3, .level-4, .level-5 {
+    background-color: rgba(var(--accent-primary), 0.05);
+    border-top: 1px solid rgba(var(--border-color-subtle), 0.5);
+    border-bottom: 1px solid rgba(var(--border-color-subtle), 0.5);
+}
+tbody tr:first-child { border-top: none; }
+
+/* --- Buttons --- */
+.add-button {
+    background-color: var(--accent-primary);
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.add-button:hover {
+    background-color: var(--accent-purple);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--shadow-color-dark);
+}
+
+/* --- Modal Content --- */
+#modal-content select,
+#modal-content textarea,
+#modal-content input[type="text"],
+#modal-content input[type="date"],
+#modal-content input[type="time"],
+#modal-content input[type="range"],
+#modal-content input[type="password"] {
+    background-color: var(--background-medium);
+    border: 1px solid var(--border-color-medium);
+    color: var(--text-light);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+#modal-content input:focus,
+#modal-content textarea:focus,
+#modal-content select:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px rgba(var(--accent-primary), 0.3);
+    outline: none;
+}
+#modal-content input::placeholder,
+#modal-content textarea::placeholder {
+    color: var(--text-medium);
+}
+#modal-content label {
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* --- Daily Report Specific --- */
+#daily-textarea {
+    background-color: var(--background-medium);
+    color: var(--text-light);
+    border: 1px solid var(--border-color-medium);
+    border-radius: 0.5rem;
+}
+#daily-render {
+    background-color: var(--background-light);
+    color: var(--text-light);
+    border: 1px solid var(--border-color-medium);
+    border-radius: 0.5rem;
+}
+#daily-render h1, #daily-render h2, #daily-render h3 {
+    color: var(--accent-primary);
+    border-bottom-color: var(--border-color-subtle);
+}
+#daily-render a { color: var(--accent-primary); }
+#daily-render code {
+    background-color: var(--background-medium);
+    color: var(--accent-warning);
+}
+#daily-render pre {
+    background-color: var(--background-medium);
+}
+#daily-render blockquote {
+    border-left-color: var(--accent-purple);
+    background-color: var(--background-medium);
+}
+
+/* --- Calendar Specific --- */
+.calendar-section {
+    /*background-color: var(--background-medium);*/
+    border-radius: 0.75rem;
+    /*padding: 1rem;*/
+    box-shadow: 0 4px 15px var(--shadow-color-dark);
+    border: 1px solid var(--border-color-medium);
+}
+.calendar-section h3 {
+    color: var(--text-light);
+}
+
+#calendar-container {
+    border-radius: 0.75rem;
+}
+/*
+.calendar-chip-both { background-color: var(--accent-purple); }
+.calendar-chip-scheduled { background-color: var(--accent-primary); }
+.calendar-chip-deadline { background-color: var(--accent-danger); }
+.calendar-chip-day { background-color: var(--accent-warning); color: var(--background-dark) !important; }
+*/
+
+.urgent-tasks-section {
+    background-color: #2d3748;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color-medium);
+}
+

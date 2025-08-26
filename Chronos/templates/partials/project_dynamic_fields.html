@@ -1,0 +1,10 @@
+<!-- Scripting -->
+<div class="border-t pt-4 mt-4">
+    <h3 class="text-lg font-semibold mb-2">Script Jinja2</h3>
+    <div class="flex items-center justify-between mb-2">
+      <p class="text-sm text-gray-400">Actions: set_status, set_priority, add_tag, etc.</p>
+      <button type="button" id="run-project-script-btn" class="px-3 py-1 rounded bg-green-600 text-white text-sm hover:bg-green-700">Exécuter</button>
+    </div>
+    <textarea name="script" rows="6" class="w-full border px-3 py-2 rounded font-mono text-sm bg-gray-900" style="color: #cdcdcd;">{{ project.script or '' }}</textarea>
+    <div id="script-output-project" class="mt-2 text-sm p-2 rounded bg-gray-800 h-10"></div>
+</div>

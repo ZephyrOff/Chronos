@@ -1,0 +1,108 @@
+<tr class="draggable group task-line level-{{ level }} {% if task.project_id %}child-of-project-{{ task.project_id }} hidden{% endif %}" data-task-id="{{ task.id }}" data-task-name="{{ task.name }}" data-start-date="{{ task.start_date.isoformat() if task.start_date else '' }}">
+      <td class="pl-1 pr-2 text-gray-400 cursor-move">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 drag-handle group-hover:opacity-100 opacity-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+        </svg>
+      </td>
+      <td class="px-2 py-2 align-top {% if task.project_id %}pl-6{% endif %}">
+        <div class="flex items-center task-toggle-area">
+            {% if task.children|length > 0 %}
+              <button class="mr-1 toggle-btn" data-task-id="{{ task.id }}" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 toggle-icon transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            {% else %}
+              <span class="mr-5"></span>
+            {% endif %}
+            <strong>
+              <span class="mr-1">{{ task.icon or '📁' if task.children else '📋' }}</span>
+              {{ task.name }}
+            </strong>
+        </div>
+        <div class="pl-5 mt-1 space-y-1">
+            <div class="flex flex-wrap gap-1">
+                {% for tag in task.tags %}
+                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">#{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+            <div class="text-xs text-gray-500 space-x-2">
+                {% for attr in task.attributes_rel %}
+                    <span><strong class="font-medium">{{ attr.name }}:</strong> {{ attr.value }}</span>
+                {% endfor %}
+            </div>
+        </div>
+      </td>
+      <td class="px-4 py-2 align-top">
+        {% include "partials/status_dropdown.html" with context %}
+      </td>
+      <td class="px-4 py-2 align-top">
+        {% set progress = task.calculated_progress %}
+        <div class="progress-bar w-full rounded h-2">
+          <div class="progress-bar-percent h-2 rounded mt-2" style="width: {{ progress }}%"></div>
+        </div>
+      </td>
+      <td class="px-4 py-2 align-top">
+        {% include "partials/priority_dropdown.html" with context %}
+      </td>
+      <td class="deadline-text px-4 py-2 text-sm align-top">
+        {% if task.deadline %}
+            {{ task.deadline.strftime('%d %b %Y') }}
+        {% endif %}
+      </td>
+      <td class="px-4 py-2 space-x-2 align-top">
+        <a data-url="{{ url_for('modal.edit_task_form', task_id=task.id) }}" class="edit-text hover:underline edit-link">Éditer</a>
+      </td>
+    </tr>
+
+    {% for sub in task.children %}
+      {% if show_future or (not sub.start_date or sub.start_date <= today) %}
+      <tr class="hidden child-of-{{ task.id }} group subtask-line" data-task-id="{{ sub.id }}" data-start-date="{{ sub.start_date.isoformat() if sub.start_date else '' }}">
+        <td class="pl-1 pr-2 text-gray-400 cursor-move">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 drag-handle group-hover:opacity-100 opacity-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+          </svg>
+        </td>
+        <td class="px-2 py-2 align-top {% if task.project_id %}pl-12{% else %}pl-6{% endif %}">
+          <div class="flex items-center">
+            <strong>
+                <span class="mr-1">{{ sub.icon or '📋' }}</span> 
+                {{ sub.name }}
+            </strong>
+          </div>
+           <div class="pl-11 mt-1 space-y-1">
+                <div class="flex flex-wrap gap-1">
+                    {% for tag in sub.tags %}
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">#{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+                <div class="text-xs text-gray-500 space-x-2">
+                    {% for attr in sub.attributes_rel or [] %}
+                        <span><strong class="font-medium">{{ attr.name }}:</strong> {{ attr.value }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </td>
+        <td class="px-4 py-2 align-top">
+          {% set task = sub %} {# pour réutiliser les includes #}
+          {% include "partials/status_dropdown.html" with context %}
+        </td>
+        <td class="px-4 py-2 align-top">
+          <div class="progress-bar w-full rounded h-2">
+            <div class="progress-bar-percent h-2 rounded mt-2" style="width: {{ sub.progress }}%"></div>
+          </div>
+        </td>
+        <td class="px-4 py-2 align-top">
+          {% include "partials/priority_dropdown.html" with context %}
+        </td>
+        <td class="deadline-text px-4 py-2 text-sm align-top">
+            {% if sub.deadline %}
+                {{ sub.deadline.strftime('%d %b %Y') }}
+            {% endif %}
+        </td>
+        <td class="px-4 py-2 space-x-2 align-top">
+          <a data-url="{{ url_for('modal.edit_task_form', task_id=sub.id) }}" class="edit-text hover:underline edit-link">Éditer</a>
+        </td>
+      </tr>
+      {% endif %}
+    {% endfor %}

@@ -1,0 +1,152 @@
+<!-- Basic Info -->
+<div class="grid grid-cols-2 gap-4">
+  <div>
+    <label class="block mb-1">Nom</label>
+    <input type="text" name="name" value="{{ task.name }}" class="w-full border px-3 py-1 rounded">
+  </div>
+  <div>
+    <label class="block mb-1">Icône (emoji)</label>
+    <input type="text" name="icon" value="{{ task.icon or '' }}" class="w-full border px-3 py-1 rounded" placeholder="💡">
+  </div>
+</div>
+
+<!-- Parent Task -->
+<div id="parent-name-display" class="text-sm text-gray-400 mb-1"></div>
+<div>
+  <label class="block mb-1">Parent</label>
+  <select name="parent_id" class="w-full border px-3 py-1 rounded">
+    <option value="">— Aucune —</option>
+    {% for t in all_tasks if not t.parent_id %}
+      <option value="{{ t.id }}" {% if task.parent_id == t.id %}selected{% endif %}>📁 {{ t.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<!-- Project -->
+<div id="project-name-display" class="text-sm text-gray-400 mb-1"></div>
+<div>
+  <label class="block mb-1">Projet</label>
+  <select name="project_id" class="w-full border px-3 py-1 rounded">
+    <option value="">— Aucun —</option>
+    {% for p in all_projects %}
+      <option value="{{ p.id }}" {% if task.project_id == p.id %}selected{% endif %}>🚀 {{ p.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<!-- Status and Priority -->
+<div class="grid grid-cols-2 gap-4">
+  <div>
+    <label class="block mb-1">Statut</label>
+    <select name="status" class="w-full border px-3 py-1 rounded">
+      {% for opt in ['À commencer','En cours','En pause','Terminé'] %}
+        <option value="{{ opt }}" {% if task.status == opt %}selected{% endif %}>{{ opt }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label class="block mb-1">Priorité</label>
+    <select name="priority" class="w-full border px-3 py-1 rounded">
+      {% for p in ['—', '01 - Bas', '02 - Moyen', '03 - Haut', '04 - Urgent'] %}
+        <option value="{{ p }}" {% if task.priority == p %}selected{% endif %}>{{ p }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</div>
+
+<!-- Progress -->
+<div>
+  <label class="block mb-1">Progression (%)</label>
+  <div class="flex items-center gap-2">
+    <input id="progress-slider" type="range" name="progress" min="0" max="100" step="1" value="{{ task.progress|int }}" class="w-full" {% if task.children|length > 0 %}disabled{% endif %}>
+    <span id="progress-value" class="w-8 text-right">{{ task.progress|int }}</span><span>%</span>
+  </div>
+</div>
+
+<!-- Dates -->
+<div class="grid grid-cols-2 gap-4">
+  <div>
+    <label class="block mb-1">Date de début</label>
+    <input type="date" name="start_date" value="{{ task.start_date.strftime('%Y-%m-%d') if task.start_date else '' }}" class="w-full border px-3 py-1 rounded">
+    <input type="time" name="start_time" value="{{ task.start_date.strftime('%H:%M') if task.start_date else '' }}" class="w-full border px-3 py-1 rounded mt-1">
+  </div>
+  <div>
+    <label class="block mb-1">Date limite</label>
+    <input type="date" name="deadline" value="{{ task.deadline.strftime('%Y-%m-%d') if task.deadline else '' }}" class="w-full border px-3 py-1 rounded">
+    <input type="time" name="deadline_time" value="{{ task.deadline.strftime('%H:%M') if task.deadline else '' }}" class="w-full border px-3 py-1 rounded mt-1">
+  </div>
+</div>
+
+<div class="separator"></div>
+
+<!-- Recurrence -->
+<div class="pt-4">
+  <h3 class="text-lg font-semibold mb-2">Récurrence</h3>
+  <div class="grid grid-cols-2 gap-4">
+      <div>
+          <label class="block mb-1">Règle</label>
+          <select id="recurrence-rule-select" name="recurrence_rule" class="w-full border px-3 py-1 rounded">
+              <option value="">Aucune</option>
+              {% for rule in recurrence_list %}
+              <option value="{{ rule }}" {% if task.recurrence_rule == rule %}selected{% endif %}>{{ rule|capitalize }}</option>
+              {% endfor %}
+          </select>
+      </div>
+      <div id="recurrence-day-container" style="display: none;">
+          <label id="recurrence-day-label" class="block mb-1">Jour</label>
+          <select id="recurrence-day-select" name="recurrence_day" class="w-full border px-3 py-1 rounded"></select>
+      </div>
+  </div>
+  <div class="mt-4">
+      <label class="block mb-1">Modèle de nom</label>
+      <input type="text" name="recurrence_template" value="{{ task.recurrence_template or '' }}" class="w-full border px-3 py-1 rounded" placeholder="Ex: Rapport - {{date}}">
+  </div>
+</div>
+
+<div class="separator"></div>
+
+<!-- Tags -->
+<div class="pt-4">
+    <label class="block mb-1">Tags</label>
+    <div class="flex flex-wrap gap-2 items-center p-2 rounded mb-2">
+        <input type="text" id="tag-input" class="flex-grow bg-transparent focus:outline-none" placeholder="Ajouter un tag...">
+    </div>
+    <div id="tags-container" class="flex flex-wrap gap-1 mt-2">
+        {% for tag in task.tags %}
+        <div class="tag-chip bg-gray-200 text-gray-700 px-2 py-1 rounded-full flex items-center text-sm">
+            <span>{{ tag.name }}</span>
+            <button type="button" class="remove-tag-btn ml-2 text-gray-500 font-bold">x</button>
+        </div>
+        {% endfor %}
+    </div>
+    <input type="hidden" name="tags" id="hidden-tags-input" value="{{ task.tags|map(attribute='name')|join(', ') }}">
+</div>
+
+<div class="separator"></div>
+
+<!-- Custom Attributes -->
+<div class="pt-4">
+    <h3 class="text-lg font-semibold mb-2">Attributs personnalisés</h3>
+    <div id="custom-attributes-container" class="space-y-2">
+        {% for attr in task.attributes_rel %}
+        <div class="flex items-center gap-2 attribute-row">
+            <input type="text" name="attr_name_{{ loop.index0 }}" value="{{ attr.name }}" class="flex-1 border px-3 py-1 rounded bg-gray-700" placeholder="Nom de l'attribut">
+            <input type="text" name="attr_value_{{ loop.index0 }}" value="{{ attr.value }}" class="flex-1 border px-3 py-1 rounded bg-gray-700" placeholder="Valeur">
+            <button type="button" class="delete-attribute text-red-500 hover:text-red-700 font-bold p-1">X</button>
+        </div>
+        {% endfor %}
+    </div>
+    <button type="button" id="add-attribute" class="mt-2 px-3 py-1 rounded border text-sm">+ Ajouter un attribut</button>
+</div>
+
+<div class="separator"></div>
+
+<!-- Description and Remarks -->
+<div class="pt-4">
+  <label class="block mb-1">Description</label>
+  <textarea name="description" rows="4" class="w-full border px-3 py-2 rounded">{{ task.description or '' }}</textarea>
+</div>
+<div>
+  <label class="block mb-1">Remarques</label>
+  <input type="text" name="remark" value="{{ task.remark or '' }}" class="w-full border px-3 py-1 rounded">
+</div>

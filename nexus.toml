@@ -1,0 +1,62 @@
+[project]
+name = "Chronos"
+version = "1.0.0"
+description = "Task manager"
+mainfile = "main.py"
+requires-python = ">=3.10"
+
+[project.metadata]
+authors = ["ZephyrOff"]
+maintainers = []
+readme = "README.md"
+license = "mit"
+license_file = "LICENSE"
+keywords = []
+classifiers = []
+copyright = ""
+
+[project.urls]
+changelog = ""
+homepage = ""
+documentation = ""
+
+[project.dependencies]
+Flask = "N.A"
+Flask-SQLAlchemy = "N.A"
+PyJWT = "N.A"
+bcrypt = "N.A"
+waitress = "N.A"
+PyYAML = "N.A"
+Flask-CORS = "N.A"
+requests = "N.A"
+impmagic = "N.A"
+zpp_store = "N.A"
+cryptography = "N.A"
+
+[project.dependencies.windows]
+
+[project.dependencies.linux]
+
+[project.build]
+packages = []
+includes = []
+excludes = []
+include_files = []
+optimize = 0
+no_compress = false
+GUI = false
+icon = ""
+
+[project.wheel]
+platforms = "ALL"
+
+[project.wheel.entry_points]
+console_scripts = []
+
+[venv.runner]
+env_dir = ".venv/runner"
+env_name = "runner"
+env_exe = ".venv/runner/Scripts/python.exe"
+bin_path = ".venv/runner/Scripts"
+version = "N.A"
+default = true

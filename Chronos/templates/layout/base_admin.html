@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Gestion des tâches</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/static/sidebar.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.0/air-datepicker.min.css">
+      
+      <style>
+        body{
+          background-color: rgb(50, 51, 56);
+        }
+        .notification {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: white;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .notification.success {
+            background-color: #4CAF50; /* Green */
+        }
+        .notification.error {
+            background-color: #f44336; /* Red */
+        }
+        .notification.info {
+            background-color: #2196F3; /* Blue */
+        }
+
+        .deadline-text {
+          color: rgba(96, 108, 125, 1);
+        }
+
+        .edit-text {
+          color: rgba(84, 113, 161, 1);
+        }
+      </style>
+    </head>
+    <body class="text-gray-800 flex min-h-screen">
+      <div class="flex-grow flex flex-col">
+        <main class="flex-grow">
+          {% block content %}{% endblock %}
+        </main>
+
+        <!-- Notifications Container -->
+        <div id="notifications-container" class="fixed top-4 right-4 z-50 space-y-2">
+          <!-- Notifications will be appended here -->
+        </div>
+      </div>
+    
+    <!-- Custom Context Menu -->
+    <div id="custom-context-menu" class="context-menu hidden">
+        <ul id="context-menu-options">
+            <!-- Options will be dynamically inserted here -->
+        </ul>
+    </div>
+    </body>
+</html>

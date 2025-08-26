@@ -1,0 +1,29 @@
+<div id="manage-scripts-modal-content" class="space-y-4 p-6">
+  <h2 class="text-xl font-semibold mb-2">Gérer les scripts</h2>
+
+  <div class="table_div">
+    <table id="script-table" class="w-full table-auto text-left text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 w-4/5">Nom du script</th>
+          <th class="px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for script in script_templates %}
+            <tr>
+                <td class="border px-4 py-2">{{ script.name }}</td>
+                <td class="border px-4 py-2">
+                    <button type="button" class="edit-script-btn px-2 py-1 rounded text-white text-xs mb-1 save-button" data-script-id="{{ script.id }}">Éditer</button>
+                    <button type="button" class="delete-script-btn px-2 py-1 rounded text-xs delete-button" data-script-id="{{ script.id }}">Supprimer</button>
+                </td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex justify-end space-x-2 mt-6">
+    <button type="button" id="modal-cancel" class="px-4 py-2 rounded border close-button">Fermer</button>
+  </div>
+</div>

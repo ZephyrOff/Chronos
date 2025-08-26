@@ -1,0 +1,21 @@
+<div class="p-4">
+    <h2 class="text-2xl font-bold mb-4 text-white">Tasks for {{ selected_date }}</h2>
+    <div class="space-y-4">
+        {% for item in items %}
+            <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold text-white">{{ item.icon }} {{ item.name }}</h3>
+                <div class="grid grid-cols-2 gap-4 mt-2 text-gray-400">
+                    <p><strong>Status:</strong> {{ item.status }}</p>
+                    <p><strong>Priority:</strong> {{ item.priority }}</p>
+                    <p><strong>Progress:</strong> {{ item.progress }}%</p>
+                    <p><strong>Description:</strong> {{ item.description }}</p>
+                    {% if not item.is_project %}
+                    <p><strong>Remark:</strong> {{ item.remark }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <p class="text-white">No tasks or projects for this day.</p>
+        {% endfor %}
+    </div>
+</div>

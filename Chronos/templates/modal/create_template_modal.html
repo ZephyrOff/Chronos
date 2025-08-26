@@ -1,0 +1,23 @@
+<form id="create-template-form" method="post" action="/create_template" class="space-y-4 p-6">
+  <h2 class="text-xl font-semibold mb-2">Créer un nouveau modèle</h2>
+
+  <div>
+    <label class="block mb-1">Nom du modèle</label>
+    <input type="text" name="template_name" class="w-full border px-3 py-1 rounded" required>
+  </div>
+
+  <div>
+    <label class="block mb-1">Basé sur la tâche (optionnel)</label>
+    <select name="task_id" class="w-full border px-3 py-1 rounded">
+      <option value="">— Aucune tâche —</option>
+      {% for task in tasks %}
+        <option value="{{ task.id }}">{{ task.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="flex justify-end space-x-2 mt-6">
+    <button type="button" id="modal-cancel" class="px-4 py-2 rounded border close-button">Annuler</button>
+    <button type="submit" class="px-4 py-2 rounded save-button">Créer</button>
+  </div>
+</form>

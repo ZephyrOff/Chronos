@@ -1,0 +1,30 @@
+<form id="add-from-template-form" method="post" action="/add_from_template" class="space-y-4 p-6">
+  <h2 class="text-xl font-semibold mb-2">Créer une tâche à partir d'un modèle</h2>
+
+  <div>
+    <label class="block mb-1">Sélectionner un modèle</label>
+    <select name="template_id" class="w-full border px-3 py-1 rounded" required>
+      <option value="">— Choisir un modèle —</option>
+      {% for template in templates %}
+        <option value="{{ template.id }}">{{ template.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label class="block mb-1">Nom de la tâche (optionnel)</label>
+    <input type="text" name="task_name" class="w-full border px-3 py-1 rounded" placeholder="Laisser vide pour utiliser le nom du modèle">
+  </div>
+
+  <div>
+    <label class="flex items-center">
+      <input type="checkbox" name="reset_priority" value="true" class="mr-2">
+      <span>Réinitialiser les priorités</span>
+    </label>
+  </div>
+
+  <div class="flex justify-end space-x-2 mt-6">
+    <button type="button" id="modal-cancel" class="px-4 py-2 rounded border close-button">Annuler</button>
+    <button type="submit" class="px-4 py-2 rounded save-button">Créer</button>
+  </div>
+</form>

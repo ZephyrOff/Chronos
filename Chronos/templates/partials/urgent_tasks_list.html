@@ -1,0 +1,16 @@
+{% if urgent_tasks %}
+  {% for task in urgent_tasks %}
+    <li>
+      <a data-url="{{ url_for('modal.edit_task_form', task_id=task.id) }}" class="edit-link urgent-notification block p-2 rounded-md transition-colors duration-200 mx-auto">
+        <div class="flex items-center space-x-2">
+          <span class="text-sm font-semibold">{{ task.icon or '🔔' }} {{ task.name }}</span>
+        </div>
+        {% if task.deadline %}
+          <span class="text-xs text-red-200">Échéance: {{ task.deadline }}</span>
+        {% endif %}
+      </a>
+    </li>
+  {% endfor %}
+{% else %}
+  <li class="text-gray-400 ml-3">Aucune tâche urgente.</li>
+{% endif %}

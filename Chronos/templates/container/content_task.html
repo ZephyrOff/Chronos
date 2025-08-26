@@ -1,0 +1,122 @@
+{% set checkbox_icon_svg %}
+<svg width="15px" height="15px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#cfcfcf"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="m 3 0 c -1.644531 0 -3 1.355469 -3 3 v 10 c 0 1.644531 1.355469 3 3 3 h 10 c 1.644531 0 3 -1.355469 3 -3 v -10 c 0 -1.644531 -1.355469 -3 -3 -3 z m 0 2 h 10 c 0.421875 0 0.765625 0.234375 0.917969 0.585938 l -0.667969 0.757812 l -6.296875 7.195312 l -2.246094 -2.246093 c -0.390625 -0.390625 -1.023437 -0.390625 -1.414062 0 s -0.390625 1.027343 0 1.417969 l 3 3 c 0.410156 0.40625 1.078125 0.386718 1.460937 -0.050782 l 6.246094 -7.136718 v 7.476562 c 0 0.570312 -0.429688 1 -1 1 h -10 c -0.570312 0 -1 -0.429688 -1 -1 v -10 c 0 -0.570312 0.429688 -1 1 -1 z m 0 0" fill="#ababab"></path> </g></svg>
+{% endset %}
+
+<div class="p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold titre-text">Tableau de gestion des tâches</h1>
+    </div>
+
+    <div class="flex flex-wrap gap-2 items-end mb-6">
+      <div class="relative inline-block">
+        <button id="filter-status-btn" class="px-3 py-1 border rounded filter-button flex items-center space-x-2">
+          {{ checkbox_icon_svg }}
+          <span>Statut</span>
+        </button>
+        <div id="filter-status-dropdown" class="absolute hidden bg-white border rounded shadow p-2 z-10 mt-1 w-60">
+          {% for s in status_list %}
+            <label class="block text-xs">
+              <input type="checkbox" class="filter-status-check mr-2" value="{{ s.name }}">
+              <div class="mt-1 status-cell {{ s.css_name }}">
+              {{ s.name }}
+              </div>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="relative inline-block">
+        <button id="filter-priority-btn" class="px-3 py-1 border rounded filter-button flex items-center space-x-2">
+          {{ checkbox_icon_svg }}
+          <span>Priorité</span>
+        </button>
+        <div id="filter-priority-dropdown" class="absolute hidden bg-white border rounded shadow p-2 z-10 mt-1 w-60">
+          {% for p in priority_list %}
+            <label class="block text-xs">
+              <input type="checkbox" class="filter-priority-check mr-2 {{ p.css_name }}" value="{{ p.name }}">
+              <div class="mt-1 priority-cell {{ p.css_name }}">
+              {{ p.name }}
+              </div>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="relative inline-block">
+        <button id="filter-tag-btn" class="px-3 py-1 border rounded filter-button flex items-center space-x-2">
+          {{ checkbox_icon_svg }}
+          <span>Tags</span>
+        </button>
+        <div id="filter-tag-dropdown" class="absolute hidden bg-white border rounded shadow p-2 z-10 mt-1 w-60">
+          {% for tag in all_tags %}
+            <label class="block text-xs">
+              <input type="checkbox" class="filter-tag-check mr-2" value="{{ tag.name }}">
+              <div class="mt-1 tag-cell " style="background-color: {{ tag.background_color }}; color: {{ tag.text_color }};">
+              {{ tag.name }}
+              </div>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="relative inline-block ml-4">
+          <label class="inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="show-future-toggle" value="" 
+                   class="sr-only peer focus-visible:outline-none focus:outline-none focus:ring-0"
+                   {% if show_future %}checked{% endif %}>
+            <div class="relative w-9 h-5 bg-gray-200 dark:bg-gray-700 rounded-full
+                        peer-focus:outline-none peer-focus:ring-0
+                        peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
+                        peer-checked:after:border-white after:content-['']
+                        after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300
+                        after:border after:rounded-full after:h-4 after:w-4 after:transition-all
+                        dark:border-gray-600 peer-checked:bg-teal-600 dark:peer-checked:bg-teal-600">
+            </div>
+            <span class="ms-3 text-sm font-medium text-gray-400 dark:text-gray-100">Hidden task</span>
+          </label>
+      </div>
+
+      <div class="flex items-center space-x-2 ml-auto">
+          <div class="relative group">
+              <button type="button" class="px-4 py-1 rounded menu-button">+ Ajouter</button>
+              <div class="absolute hidden group-hover:block bg-white border rounded shadow-lg w-48 z-10 right-0 left-auto">
+                  <a href="#" id="add-task-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">+ Nouvelle tâche</a>
+                  <a href="#" id="add-project-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">+ Nouveau projet</a>
+              </div>
+          </div>
+          <div class="relative group">
+              <button type="button" class="px-4 py-1 rounded menu-button">Modèles</button>
+              <div class="absolute hidden group-hover:block bg-white border rounded shadow-lg w-48 z-10 right-0 left-auto">
+                  <a href="#" id="add-from-template-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">+ Créer depuis un modèle</a>
+                  <a href="#" id="create-template-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">+ Créer un modèle</a>
+                  <a href="#" id="manage-templates-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Gérer les modèles</a>
+              </div>
+          </div>
+          <div class="relative group">
+              <button type="button" class="px-4 py-1 rounded menu-button">Scripts</button>
+              <div class="absolute hidden group-hover:block bg-white border rounded shadow-lg w-48 z-10 right-0 left-auto">
+                  <a href="#" id="run-all-scripts-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Exécuter tous les scripts</a>
+                  <a href="#" id="create-script-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">+ Créer un script</a>
+                  <a href="#" id="manage-scripts-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Gérer les scripts</a>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="table_div">
+      <table id="task-table" class="w-full table-auto text-left text-sm">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="w-10"></th>
+            <th class="px-4 py-2 w-2/5">Nom</th>
+            <th class="px-4 py-2">Statut</th>
+            <th class="px-4 py-2">Progression</th>
+            <th class="px-4 py-2">Priorité</th>
+            <th class="px-4 py-2">Deadline</th>
+            <th class="px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        {% include "task_manager/tasks_tbody.html" %}
+      </table>
+    </div>
+  </div>

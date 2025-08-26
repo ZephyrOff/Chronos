@@ -1,0 +1,15 @@
+<div class="relative inline-block text-xs font-medium">
+  <button class="toggle-dropdown px-2 py-1 rounded status-cell {{ get_css_name(task.status, status_list) }}"
+          data-task-id="{{ task.id }}"
+          data-field="status"
+          data-value="{{ task.status }}">
+    {{ task.status }}
+  </button>
+  <div class="dropdown-menu hidden absolute border rounded shadow text-sm z-10 mt-1 min-w-[130px]">
+    {% for s in status_list %}
+      <div class="dropdown-option px-2 py-1 cursor-pointer" data-value="{{ s.name }}">
+        <div class="status-cell {{ s.css_name }} text-xs">{{ s.name }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

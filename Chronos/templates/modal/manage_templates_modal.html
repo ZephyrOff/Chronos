@@ -1,0 +1,23 @@
+<div class="space-y-4 p-6">
+  <h2 class="text-xl font-semibold mb-2">Gérer les modèles</h2>
+
+  <div class="table_div">
+    <table id="template-table" class="w-full table-auto text-left text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 w-4/5">Nom du modèle</th>
+          <th class="px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for template in templates %}
+            {% include 'partials/template_row.html' %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex justify-end space-x-2 mt-6">
+    <button type="button" id="modal-cancel" class="px-4 py-2 rounded border">Fermer</button>
+  </div>
+</div>

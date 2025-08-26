@@ -1,0 +1,26 @@
+server:
+  host: 0.0.0.0
+  port: 5000
+
+template_dir: templates
+static_dir: static
+
+
+secret_key: your_super_secret_key_here
+
+app:
+  mode: dev
+
+  auth: False
+  admin: True
+
+  auto_protect: True
+  blacklist: "null"
+  whitelist: "null"
+  max_fail: 5
+  fail_interval: 300
+  ban_time: 300
+
+database:
+  engine: sqlite
+  filename: app.db

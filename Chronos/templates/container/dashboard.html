@@ -1,0 +1,90 @@
+<div class="p-6">
+    <h1 class="text-3xl font-bold text-white mb-6">Tableau de Bord</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- New General Statistics Block -->
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 text-white col-span-full">
+            <h2 class="text-xl font-semibold mb-4">Statistiques Générales</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- <div>
+                    <p class="flex justify-between items-center mb-4"><span>Total Tâches :</span> <span class="text-2xl font-bold text-purple-400">{{ total_tasks }}</span></p>
+                    <p class="flex justify-between items-center mb-4"><span>Total Projets :</span> <span class="text-2xl font-bold text-orange-400">{{ total_projects }}</span></p>
+                </div> -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="h-64 bg-gray-800 rounded-lg shadow-lg p-6 flex">
+                        <div class="w-3/4">
+                            <h3 class="text-lg font-semibold mb-2">Tâches par Statut</h3>
+                            <canvas id="tasksByStatusChart"></canvas>
+                        </div>
+                        <div id="tasksByStatusChartLegend"></div>
+                    </div>
+                    <div class="h-64 bg-gray-800 rounded-lg shadow-lg p-6 flex">
+                        <div class="w-3/4">
+                            <h3 class="text-lg font-semibold mb-2">Tâches par Priorité</h3>
+                            <canvas id="tasksByPriorityChart"></canvas>
+                        </div>
+                        <div id="tasksByPriorityChartLegend"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Weekly Summary -->
+                <div class="bg-gray-800 rounded-lg shadow-lg p-6 text-white h-64 flex">
+            <div class="w-3/4">
+                <h2 class="text-xl font-semibold mb-4">Résumé de la semaine ({{ start_of_week.strftime('%d/%m') }} - {{ end_of_week.strftime('%d/%m') }})</h2>
+                <canvas id="weeklySummaryChart"></canvas>
+            </div>
+            <div id="weeklySummaryChartLegend"></div>
+        </div>
+
+        <!-- Deadlines Prochaines (7 jours) -->
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 text-white h-64">
+            <h2 class="text-xl font-semibold mb-4">Deadlines Prochaines (7 jours)</h2>
+            {% if upcoming_deadlines %}
+            <ul class="space-y-2" id="upcomingDeadlinesList">
+                {% for task in upcoming_deadlines %}
+                <li class="cursor-pointer" data-task-id="{{ task.id }}">{{ task.name }} ({{ task.deadline.strftime('%d/%m') }})</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Aucune deadline prochaine.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Tâches en Retard -->
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 text-white h-64">
+            <h2 class="text-xl font-semibold mb-4">Tâches en Retard</h2>
+            {% if overdue_tasks %}
+            <ul class="space-y-2" id="overdueTasksList">
+                {% for task in overdue_tasks %}
+                <li class="cursor-pointer" data-task-id="{{ task.id }}">{{ task.name }} (Deadline: {{ task.deadline.strftime('%d/%m') }})</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Aucune tâche en retard.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script type="application/json" id="dashboard-data">
+    {{ {
+        'tasks_started_this_week': tasks_started_this_week,
+        'tasks_in_progress_this_week': tasks_in_progress_this_week,
+        'tasks_completed_this_week': tasks_completed_this_week,
+        'total_tasks': total_tasks,
+        'tasks_by_status_json': tasks_by_status_json,
+        'tasks_by_priority_json': tasks_by_priority_json,
+        'start_of_week': start_of_week.strftime('%Y-%m-%d'),
+        'end_of_week': end_of_week.strftime('%Y-%m-%d'),
+        'total_projects': total_projects,
+        'upcoming_deadlines': upcoming_deadlines_json,
+        'overdue_tasks': overdue_tasks_json,
+    } | tojson | safe }}
+</script>
+

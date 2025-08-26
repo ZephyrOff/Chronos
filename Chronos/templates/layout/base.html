@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Gestion des tâches</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="stylesheet" href="/static/sidebar.css">
+      <link rel="stylesheet" href="/static/themes.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.0/air-datepicker.min.css">
+
+    </head>
+    <body class="text-gray-800 flex min-h-screen">
+      {% include 'partials/sidebar.html' %}
+
+      <div class="flex-grow flex flex-col">
+        <!--
+        <header class="bg-white shadow p-4 mb-4 flex justify-between items-center">
+            {% if username %}
+            <div class="relative">
+                <button id="user-menu-button" class="flex items-center text-gray-600 hover:text-gray-800 focus:outline-none">
+                    <span class="mr-2">{{ username }}</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden">
+                    <a href="#" id="change-password-link" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Changer le mot de passe</a>
+                    {% if role == 'admin' and admin_enable %}
+                    <a href="{{ url_for('admin_bp.admin_panel') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin</a>
+                    {% endif %}
+                    <a href="{{ url_for('auth_bp.logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                </div>
+            </div>
+            {% endif %}
+
+        </header>
+        -->
+
+        <main class="flex-grow">
+          {% block content %}{% endblock %}
+        </main>
+
+        <!-- Notifications Container -->
+        <div id="notifications-container" class="fixed top-4 right-4 z-50 space-y-2">
+          <!-- Notifications will be appended here -->
+        </div>
+      </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/base.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.0/air-datepicker.min.js"></script>
+    <script src="/static/sidebar.js"></script>
+    <script src="/static/context_menu.js"></script>
+    <script src="/static/notifications.js"></script>
+    <script>chargerContenu('content_task');</script>
+    
+
+    <!-- Custom Context Menu -->
+    <div id="custom-context-menu" class="context-menu hidden">
+        <ul id="context-menu-options">
+            <!-- Options will be dynamically inserted here -->
+        </ul>
+    </div>
+
+    {% include 'modal/change_password_modal.html' %}
+    </body>
+</html>

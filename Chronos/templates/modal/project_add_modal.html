@@ -1,0 +1,81 @@
+<form id="project-add-form" method="post" action="{{ url_for('modal.add_project') }}" class="space-y-4 p-6">
+  <h2 class="text-xl font-semibold mb-2">Ajouter un nouveau projet</h2>
+
+  <!-- Basic Info -->
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="block mb-1">Nom</label>
+      <input type="text" name="name" class="w-full border px-3 py-1 rounded" required>
+    </div>
+    <div>
+      <label class="block mb-1">Icône (emoji)</label>
+      <input type="text" name="icon" class="w-full border px-3 py-1 rounded" placeholder="🚀">
+    </div>
+  </div>
+
+  <!-- Status and Priority -->
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="block mb-1">Statut</label>
+      <select name="status" class="w-full border px-3 py-1 rounded">
+        {% for s in status_list %}
+          <option value="{{ s.name }}" {% if loop.first %}selected{% endif %}>{{ s.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block mb-1">Priorité</label>
+      <select name="priority" class="w-full border px-3 py-1 rounded">
+        {% for p in priority_list %}
+          <option value="{{ p.name }}" {% if loop.first %}selected{% endif %}>{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <!-- Dates -->
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="block mb-1">Date de début</label>
+      <input type="date" name="start_date" class="w-full border px-3 py-1 rounded">
+    </div>
+    <div>
+      <label class="block mb-1">Date limite</label>
+      <input type="date" name="deadline" class="w-full border px-3 py-1 rounded">
+    </div>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- Tags -->
+  <div class="pt-4">
+      <label class="block mb-1">Tags (séparés par des virgules)</label>
+      <input type="text" name="tags" class="w-full border px-3 py-1 rounded" placeholder="ex: important, projet-x">
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- Custom Attributes -->
+  <div class="pt-4">
+      <h3 class="text-lg font-semibold mb-2">Attributs personnalisés</h3>
+      <div id="custom-attributes-container" class="space-y-2">
+      </div>
+      <button type="button" id="add-attribute" class="mt-2 px-3 py-1 rounded border text-sm">+ Ajouter un attribut</button>
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- Description and Remarks -->
+  <div class="pt-4">
+    <label class="block mb-1">Description</label>
+    <textarea name="description" rows="4" class="w-full border px-3 py-2 rounded"></textarea>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-end items-center mt-6">
+    <div class="flex space-x-2">
+        <button type="button" id="modal-cancel" class="px-4 py-2 rounded border close-button">Annuler</button>
+        <button type="submit" class="px-4 py-2 rounded save-button">Enregistrer</button>
+    </div>
+  </div>
+</form>

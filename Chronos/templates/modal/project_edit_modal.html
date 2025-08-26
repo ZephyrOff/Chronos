@@ -1,0 +1,42 @@
+<form id="project-edit-form" method="post" action="{{ url_for('modal.update_project', project_id=project.id) }}" class="space-y-4 p-6">
+  <h2 class="text-xl font-semibold mb-2">Éditer le projet : {{ project.name }}</h2>
+
+  <div class="dynamic_field">
+  {% include 'partials/project_fields.html' %}
+  </div>
+
+  <div class="separator"></div>
+
+  <!-- Scripting -->
+  <div class="pt-4">
+      <h3 class="text-lg font-semibold mb-2">Script Jinja2</h3>
+      <div class="flex items-center justify-between mb-2">
+        <p class="text-sm text-gray-400">Actions: set_status, set_priority, add_tag, etc.</p>
+        <button type="button" id="run-project-script-btn" class="px-3 py-1 rounded text-sm exec-button">Exécuter</button>
+      </div>
+      <div class="flex items-center space-x-2 mb-2">
+          <select id="script-template-select" class="w-full border px-3 py-1 rounded">
+              <option value="">-- Insérer un modèle de script --</option>
+              {% for script_template in script_templates %}
+                  <option value="{{ script_template.script_content }}">{{ script_template.name }}</option>
+              {% endfor %}
+          </select>
+          <button type="button" id="insert-script-template-btn" class="px-3 py-1 rounded text-sm spe-button">Insérer</button>
+          <button type="button" id="inject-script-btn" class="px-3 py-1 rounded text-sm spe-button">Include</button>
+      </div>
+
+      <textarea name="script" rows="6" class="w-full border px-3 py-2 rounded font-mono text-sm bg-gray-900" style="color: #cdcdcd;">{{ project.script or '' }}</textarea>
+      <div id="script-output-project" class="mt-2 text-sm p-2 rounded bg-gray-800 h-10"></div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-between items-center mt-6">
+    <div>
+        <button type="button" id="delete-project-btn" class="px-4 py-2 rounded delete-button">Supprimer</button>
+    </div>
+    <div class="flex space-x-2">
+        <button type="button" id="modal-cancel" class="px-4 py-2 rounded border close-button">Fermer</button>
+        <button type="submit" class="px-4 py-2 rounded save-button">Enregistrer</button>
+    </div>
+  </div>
+</form>

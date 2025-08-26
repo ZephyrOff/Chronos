@@ -1,0 +1,42 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<div class="p-6 max-w-xl mx-auto">
+  <h2 class="text-xl font-semibold mb-4">Détail de la tâche : {{ task.name }}</h2>
+  <form method="post" action="{{ url_for('task_manager.update_task', task_id=task.id) }}" class="space-y-4">
+    <div>
+      <label class="block mb-1">Nom</label>
+      <input name="name" value="{{ task.name }}" class="w-full border px-3 py-1 rounded">
+    </div>
+    <div>
+      <label class="block mb-1">Statut</label>
+      <select name="status" class="w-full border px-3 py-1 rounded">
+        {% for opt in ['À commencer', 'En progression', 'En pause', 'Terminé'] %}
+          <option value="{{ opt }}" {% if task.status == opt %}selected{% endif %}>{{ opt }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block mb-1">Priorité</label>
+      <select name="priority" class="w-full border px-3 py-1 rounded">
+        {% for p in ['Urgent', 'Haute', 'Moyenne', 'Basse'] %}
+          <option value="{{ p }}" {% if task.priority == p %}selected{% endif %}>{{ p }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block mb-1">Progression (%)</label>
+      <input type="number" name="progress" min="0" max="100" value="{{ task.progress }}" class="w-full border px-3 py-1 rounded">
+    </div>
+    <div>
+      <label class="block mb-1">Date limite</label>
+      <input type="date" name="deadline" value="{{ task.deadline.strftime('%Y-%m-%d') if task.deadline else '' }}" class="w-full border px-3 py-1 rounded">
+    </div>
+    <div>
+      <label class="block mb-1">Remarques</label>
+      <textarea name="remark" rows="4" class="w-full border px-3 py-2 rounded">{{ task.remark }}</textarea>
+    </div>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Mettre à jour</button>
+  </form>
+  <a href="{{ url_for('modal.index') }}" class="block mt-4 text-blue-500">← Retour</a>
+</div>
+{% endblock %}

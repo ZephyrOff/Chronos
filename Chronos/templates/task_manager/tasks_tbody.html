@@ -1,0 +1,11 @@
+<tbody id="task-list-tbody">
+  {% for item in items %}
+    {% if item.is_project %}
+      {% set project = item %}
+      {% include 'partials/project_row.html' %}
+    {% else %}
+      {% set task = item %}
+      {% include 'partials/task_row.html' %}
+    {% endif %}
+  {% endfor %}
+</tbody>

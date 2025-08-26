@@ -1,0 +1,55 @@
+<tr class="project-line level-{{ level }} {% if project.id %}project-id-{{ project.id }}{% endif %}" data-project-id="{{ project.id }}" data-project-name="{{ project.name }}">
+    <td class="pl-1 pr-2 text-gray-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 drag-handle opacity-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+        </svg>
+    </td>
+    <td class="px-2 py-2 font-bold">
+        <div class="flex items-center">
+            <button class="mr-1 toggle-btn" data-project-id="{{ project.id }}" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 toggle-icon transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+            <strong>
+                <span class="mr-1">{{ project.icon or '🚀' }}</span>
+                {{ project.name }}
+            </strong>
+        </div>
+        <div class="pl-5 mt-1 space-y-1">
+            <div class="flex flex-wrap gap-1">
+                {% for tag in project.tags %}
+                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">#{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+            <div class="text-xs text-gray-500 space-x-2">
+                {% for attr in project.attributes %}
+                    <span><strong class="font-medium">{{ attr.name }}:</strong> {{ attr.value }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </td>
+    <td class="px-4 py-2 align-top">
+        {% include "partials/project_status_dropdown.html" %}
+    </td>
+    <td class="px-4 py-2 align-top">
+        {% set progress = project.calculated_progress %}
+        <div class="progress-bar w-full rounded h-2">
+          <div class="progress-bar-percent h-2 rounded mt-2" style="width: {{ progress }}%"></div>
+        </div>
+    </td>
+    <td class="px-4 py-2 align-top">
+        {% include "partials/project_priority_dropdown.html" %}
+    </td>
+    <td class="deadline-text px-4 py-2 text-sm align-top">
+        {% if project.deadline %}
+            {{ project.deadline.strftime('%d %b %Y') }}
+        {% endif %}
+    </td>
+    <td class="px-4 py-2 space-x-2 align-top">
+        <a href="{{ url_for('modal.edit_project_form', project_id=project.id) }}" class="edit-text hover:underline edit-link">Éditer</a>
+    </td>
+</tr>
+{% for task in project.tasks if not task.parent_id %}
+    {% include 'partials/task_row.html' %}
+{% endfor %}

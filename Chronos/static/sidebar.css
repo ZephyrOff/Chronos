@@ -185,3 +185,18 @@
 .filter-hidden {
     display: none;
 }
+
+.table-icon-image {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.table-icon-emoji {
+    font-size: 20px;
+    line-height: 24px;
+    display: inline-block;
+    text-align: center;
+    width: 24px;
+}

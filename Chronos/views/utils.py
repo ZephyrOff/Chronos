@@ -234,11 +234,11 @@ def handle_recurrence(task):
 
 def get_calendar_dates_data():
     """Helper function to get all scheduled and deadline dates for tasks and projects."""
-    task_scheduled = db.session.query(Task.start_date).filter(Task.start_date.isnot(None)).distinct().all()
-    task_deadlines = db.session.query(Task.deadline).filter(Task.deadline.isnot(None)).distinct().all()
+    task_scheduled = db.session.query(Task.start_date).filter(Task.status != "Terminé").filter(Task.start_date.isnot(None)).distinct().all()
+    task_deadlines = db.session.query(Task.deadline).filter(Task.status != "Terminé").filter(Task.deadline.isnot(None)).distinct().all()
     
-    project_scheduled = db.session.query(Project.start_date).filter(Project.start_date.isnot(None)).distinct().all()
-    project_deadlines = db.session.query(Project.deadline).filter(Project.deadline.isnot(None)).distinct().all()
+    project_scheduled = db.session.query(Project.start_date).filter(Project.status != "Terminé").filter(Project.start_date.isnot(None)).distinct().all()
+    project_deadlines = db.session.query(Project.deadline).filter(Project.status != "Terminé").filter(Project.deadline.isnot(None)).distinct().all()
 
     all_scheduled = task_scheduled + project_scheduled
     all_deadlines = task_deadlines + project_deadlines

@@ -70,31 +70,46 @@ def get_urgent_tasks_html():
     today = date.today()
     two_days_from_now = today + timedelta(days=2)
 
-    # Query for urgent tasks based on priority
-    priority_urgent_tasks = Task.query.filter_by(priority='04 - Urgent').all()
-    priority_urgent_projects = Project.query.filter_by(priority='04 - Urgent').all()
+    # Tâches et projets prioritaires
+    priority_urgent_tasks = Task.query.filter(Task.status != "Terminé", Task.priority=='04 - Urgent').all()
+    priority_urgent_projects = Project.query.filter(Project.status != "Terminé", Project.priority=='04 - Urgent').all()
 
-    # Query for tasks with passed or approaching deadlines
+    # Tâches et projets avec échéance proche
     deadline_tasks = Task.query.filter(
-        (Task.deadline <= today) |
-        ((Task.deadline > today) & (Task.deadline <= two_days_from_now))
+        Task.status != "Terminé",
+        (Task.deadline <= today) | ((Task.deadline > today) & (Task.deadline <= two_days_from_now))
     ).all()
 
     deadline_projects = Project.query.filter(
-        (Project.deadline <= today) |
-        ((Project.deadline > today) & (Project.deadline <= two_days_from_now))
+        Project.status != "Terminé",
+        (Project.deadline <= today) | ((Project.deadline > today) & (Project.deadline <= two_days_from_now))
     ).all()
 
-    # Combine all tasks and projects, remove duplicates (if any, though unlikely with current filters)
-    # Convert to set for deduplication, then back to list
-    all_urgent_items = list(set(priority_urgent_tasks + priority_urgent_projects + deadline_tasks + deadline_projects))
-    
-    # Sort by deadline
-    urgent_items = sorted(all_urgent_items, key=lambda x: x.deadline.date() if x.deadline else date.max)
-    
-    urgent_items_serializable = [item.to_dict() for item in urgent_items[:5]] # Limit to 5 as before
+    # Combine all items
+    all_items = priority_urgent_tasks + priority_urgent_projects + deadline_tasks + deadline_projects
 
-    return render_template('partials/urgent_tasks_list.html', urgent_tasks=urgent_items_serializable)
+    # --- Filtrer les tâches dont le parent ou le projet est déjà dans la liste ---
+    projects_in_list = {p.id for p in all_items if isinstance(p, Project)}
+    tasks_in_list = {t.id for t in all_items if isinstance(t, Task)}
+
+    filtered_items = []
+    for item in all_items:
+        if isinstance(item, Task):
+            # ignorer la task si son parent ou son projet est déjà présent
+            parent_id = item.parent_id
+            project_id = item.project_id
+            if parent_id in tasks_in_list or project_id in projects_in_list:
+                continue
+        filtered_items.append(item)
+
+    # Tri par deadline
+    urgent_items = sorted(filtered_items, key=lambda x: x.deadline.date() if x.deadline else date.max)
+
+    # Limite à 5
+    urgent_items = urgent_items[:5]
+
+    return render_template('partials/urgent_tasks_list.html', urgent_tasks=urgent_items)
+
 
 @daily_bp.route('/api/calendar_dates')
 def get_calendar_dates():

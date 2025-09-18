@@ -19,7 +19,7 @@ import zpp_store
 import __main__
 
 from core.protect import Fail2Ban
-from jinja_custom.app import get_css_name, get_project_progress, include_script_template
+from jinja_custom.app import get_css_name, get_project_progress, include_script_template, render_icon
 from core.error import error_404
 
 
@@ -83,8 +83,69 @@ class Backend():
         ## CONFIGURATION FAIL2BAN ##
         
         #self.register_error_handlers()
-        self.app.errorhandler(404)(self.page_not_found)
         self.app.errorhandler(500)(self.internal_server_error)
+
+        self.setup_jinja_custom()
+
+
+
+    def page_not_found(self, *args):
+        whitelist_page = ["/.well-known/appspecific/com.chrome.devtools.json"]
+        
+        if self.enable_auto_protect and request.path not in whitelist_page:
+            response = self.protect.auto_protect()
+            if response:
+                return response
+
+        return render_template_string(error_404()), 404
+
+
+    def internal_server_error(self, *args):
+        whitelist_page = ["/.well-known/appspecific/com.chrome.devtools.json"]
+        
+        if self.enable_auto_protect and request.path not in whitelist_page:
+            response = self.protect.auto_protect()
+            if response:
+                return response
+
+        return render_template_string(error_404()), 500
+
+
+    def setup_jinja_custom(self):
+        self.app.jinja_env.globals.update(get_css_name=get_css_name, get_project_progress=get_project_progress, include_template=include_script_template, render_icon=render_icon)
+
+
+    def run_server(self):
+        with self.app.app_context():
+            db.create_all()
+
+            """
+            from models.user import User
+            username = "alex"
+            password = ""
+            role = "admin"
+            user = User(username=username, role=role)
+            user.set_password(password)
+            db.session.add(user)
+            db.session.commit()
+            print(f'User {username} created successfully with role {role}.')
+            exit()
+            """
+        
+        # Ajoute ProxyFix
+        from werkzeug.middleware.proxy_fix import ProxyFix
+        self.app.wsgi_app = ProxyFix(self.app.wsgi_app, x_for=1)
+
+        if self.app_mode == "PROD":
+            serve(self.app, host=self.server_address, port=self.port)
+        else:
+            self.app.run(host=self.server_address, port=self.port, debug=True)
+
+
+if __name__ == '__main__':
+    __main__.backend = Backend()
+
+    __main__.backend.run_server()
 
 
 

@@ -35,6 +35,18 @@ class JinjaScriptRunner:
         self._setup_environment()
 
     def _setup_environment(self):
+        # Définir project (toujours le même)
+        if hasattr(self.obj, 'project'):
+            self.env.globals['project'] = self.obj.project
+        else:
+            self.env.globals['project'] = None
+
+        # Définir task : si c'est une sous-tâche, on remonte au parent
+        if hasattr(self.obj, 'parent') and self.obj.parent is not None:
+            self.env.globals['task'] = self.obj.parent
+        else:
+            self.env.globals['task'] = self.obj
+        
         # --- Data Access Variables ---
         self.env.globals['tags'] = [t.name for t in self.obj.tags]
         self.env.globals['priority'] = self.obj.priority
@@ -227,7 +239,7 @@ class JinjaScriptRunner:
         push_notification(message, type)
 
     def run(self):
-        script_content = getattr(self.obj, 'script', None)
+        script_content = getattr(self, 'script', None)
         if not script_content:
             return "No script to run.", True
         
@@ -239,3 +251,19 @@ class JinjaScriptRunner:
         except Exception as e:
             db.session.rollback()
             return f"Error during script execution: {e}", False
+
+from markupsafe import Markup
+
+def render_icon(icon_string):
+    if not icon_string:
+        return ""
+    
+    icon_string = icon_string.strip()
+
+    if icon_string.startswith('http://') or icon_string.startswith('https://'):
+        return Markup(f'<img src="{icon_string}" class="table-icon-image" alt="icon">')
+    
+    if any(icon_string.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp']):
+        return Markup(f'<img src="/static/{icon_string}" class="table-icon-image" alt="icon">')
+        
+    return Markup(f'<span class="table-icon-emoji">{icon_string}</span>')

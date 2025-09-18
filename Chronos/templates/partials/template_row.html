@@ -2,7 +2,7 @@
     <td class="px-4 py-2">
         <div class="flex items-center">
             <strong>
-              <span class="mr-1">{{ template.icon or '📁' if template.children else '📋' }}</span>
+              <span class="mr-1">{{ render_icon(template.icon or ('📁' if template.children else '📋')) }}</span>
               {{ template.name }}
             </strong>
         </div>
@@ -16,7 +16,7 @@
     <td class="px-4 py-2">
         <div class="pl-6 flex items-center">
             <strong>
-                <span class="mr-1">{{ sub.icon or '📋' }}</span> 
+                <span class="mr-1">{{ render_icon(sub.icon or '📋') }}</span> 
                 {{ sub.name }}
             </strong>
         </div>

@@ -1,17 +1,17 @@
 server:
-  host: 0.0.0.0
-  port: 5000
+  host: 127.0.0.1
+  port: 5005
 
 template_dir: templates
 static_dir: static
 
 
-secret_key: your_super_secret_key_here
+secret_key: gKmRu3ivruk6ieFllGo8lUag0NpYY1Pr
 
 app:
   mode: dev
 
-  auth: False
+  auth: True
   admin: True
 
   auto_protect: True

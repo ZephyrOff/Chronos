@@ -179,7 +179,7 @@ function saveToggleState(id, open) {
 }
 
 function loadToggleStates() {
-  const toggles = JSON.parse(localStorage.getItem('toggles') || '{');
+  const toggles = JSON.parse(localStorage.getItem('toggles') || '{}');
   Object.entries(toggles).forEach(([id, open]) => {
     const [type, entityId] = id.split('-');
     let selector;

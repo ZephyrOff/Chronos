@@ -11,8 +11,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
             </button>
-            <strong>
-                <span class="mr-1">{{ project.icon or '🚀' }}</span>
+            <strong class="flex items-center">
+                <span class="mr-1">{{ render_icon(project.icon or '🚀') }}</span>
                 {{ project.name }}
             </strong>
         </div>
@@ -34,7 +34,7 @@
     </td>
     <td class="px-4 py-2 align-top">
         {% set progress = project.calculated_progress %}
-        <div class="progress-bar w-full rounded h-2">
+        <div class="progress-bar w-full rounded h-2" title="{{ progress }}%">
           <div class="progress-bar-percent h-2 rounded mt-2" style="width: {{ progress }}%"></div>
         </div>
     </td>

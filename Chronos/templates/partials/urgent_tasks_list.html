@@ -3,8 +3,19 @@
     <li>
       <a data-url="{{ url_for('modal.edit_task_form', task_id=task.id) }}" class="edit-link urgent-notification block p-2 rounded-md transition-colors duration-200 mx-auto">
         <div class="flex items-center space-x-2">
-          <span class="text-sm font-semibold">{{ task.icon or '🔔' }} {{ task.name }}</span>
+          <span class="text-sm font-semibold">{{ render_icon(task.icon or '🔔') }} {{ task.name }}</span>
         </div>
+        {% if task.project and task.parent %}
+          <span class="text-xs text-red-200">{{ task.project.name }} - {{ task.parent.name }}</span>
+        {% else %}
+          {% if task.project %}
+            <span class="text-xs text-red-200">Project: {{ task.project.name }}</span>
+          {% endif %}
+          {% if task.parent %}
+            <span class="text-xs text-red-200">Task: {{ task.parent.name }}</span>
+          {% endif %}
+        {% endif %}
+  
         {% if task.deadline %}
           <span class="text-xs text-red-200">Échéance: {{ task.deadline }}</span>
         {% endif %}

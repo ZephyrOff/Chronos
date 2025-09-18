@@ -15,8 +15,8 @@
             {% else %}
               <span class="mr-5"></span>
             {% endif %}
-            <strong>
-              <span class="mr-1">{{ task.icon or '📁' if task.children else '📋' }}</span>
+            <strong class="flex items-center">
+              <span class="mr-1">{{ render_icon(task.icon or ('📁' if task.children else '📋')) }}</span>
               {{ task.name }}
             </strong>
         </div>
@@ -38,7 +38,7 @@
       </td>
       <td class="px-4 py-2 align-top">
         {% set progress = task.calculated_progress %}
-        <div class="progress-bar w-full rounded h-2">
+        <div class="progress-bar w-full rounded h-2" title="{{ progress }}%">
           <div class="progress-bar-percent h-2 rounded mt-2" style="width: {{ progress }}%"></div>
         </div>
       </td>
@@ -63,10 +63,10 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
           </svg>
         </td>
-        <td class="px-2 py-2 align-top {% if task.project_id %}pl-12{% else %}pl-6{% endif %}">
+        <td class="px-2 py-2 align-top {% if task.project_id %}pl-16{% else %}pl-6{% endif %}">
           <div class="flex items-center">
             <strong>
-                <span class="mr-1">{{ sub.icon or '📋' }}</span> 
+                <span class="mr-1">{{ render_icon(sub.icon or '📋') }}</span> 
                 {{ sub.name }}
             </strong>
           </div>
@@ -88,7 +88,7 @@
           {% include "partials/status_dropdown.html" with context %}
         </td>
         <td class="px-4 py-2 align-top">
-          <div class="progress-bar w-full rounded h-2">
+          <div class="progress-bar w-full rounded h-2" title="{{ sub.progress }}%">
             <div class="progress-bar-percent h-2 rounded mt-2" style="width: {{ sub.progress }}%"></div>
           </div>
         </td>

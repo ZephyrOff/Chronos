@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+PyJWT
+bcrypt
+waitress
+PyYAML
+Flask-CORS
